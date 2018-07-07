@@ -7,4 +7,10 @@
 
 .idea/workspace.xml
 
-build/contracts/Migrations.json
+build
+
+.idea/jsLibraryMappings.xml
+
+.idea/misc.xml
+
+node_modules
