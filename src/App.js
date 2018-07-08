@@ -6,7 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-//import user_artifacts from '../build/contracts/User.json';
+import UserArtifact from './contracts/User.json';
+import contract from 'truffle-contract';
 
 class App extends Component {
 
@@ -21,7 +22,6 @@ class App extends Component {
             }
         };
         this.web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
-      //  const User = contract(user_artifacts);
     }
 
     componentWillMount() {
@@ -57,6 +57,15 @@ class App extends Component {
                 username: self.state.profile.username,
                 account: e.target.value
             }
+        })
+    }
+
+    createAccount(){
+        const User = contract(UserArtifact);
+        console.log(this.web3.currentProvider);
+        User.setProvider(this.web3.currentProvider);
+        User.deployed().then((instance) => {
+            console.log(instance);
         })
     }
 
@@ -97,7 +106,11 @@ class App extends Component {
                         </TextField>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button variant="contained" color="primary">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={this.createAccount.bind(this)}
+                        >
                             Register
                         </Button>
                     </Grid>
