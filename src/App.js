@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import logo from './Dyno_Logo_small.png';
 import './App.css';
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -18,7 +17,6 @@ class App extends Component {
     }
 
     handleUsernameChange(e) {
-        let self = this;
         this.setState({
             profile: {
                 username: e.target.value
