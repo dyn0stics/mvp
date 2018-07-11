@@ -20,11 +20,12 @@ class App extends Component {
             profile: {
                 username: ""
             },
-            registerDialogOpen: false
+            registerDialogOpen: false,
+            loginDialogOpen: false
         };
     }
 
-    handleUsernameChange(e) {
+    handleUsernameChange = (e) => {
         this.setState({
             profile: {
                 username: e.target.value
@@ -32,7 +33,7 @@ class App extends Component {
         })
     }
 
-    handleAccountChange(e) {
+    handleAccountChange = (e) => {
         let self = this;
         this.setState({
             profile: {
@@ -41,7 +42,7 @@ class App extends Component {
         })
     }
 
-    createAccount(){
+    createAccount = (e) =>{
         const apiUrl = window.API_URL;
         let self = this;
         axios.get(apiUrl + "user/register?username=" + self.state.profile.username)
@@ -50,12 +51,20 @@ class App extends Component {
         })
     }
 
-    handleOpen(){
+    handleOpen = (e) => {
         this.setState({registerDialogOpen: true});
     }
 
-    handleClose(){
+    handleLoginOpen = (e) => {
+        this.setState({loginDialogOpen: true});
+    }
+
+    handleClose = (e) =>{
         this.setState({registerDialogOpen: false});
+    }
+
+    handleLoginClose = (e) => {
+        this.setState({loginDialogOpen: false});
     }
 
     render() {
@@ -70,7 +79,7 @@ class App extends Component {
                 </p>
              <Dialog
                 open={this.state.registerDialogOpen}
-                onClose={this.handleClose.bind(this)}
+                onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
               >
                 <DialogTitle id="form-dialog-title">Register</DialogTitle>
@@ -85,7 +94,7 @@ class App extends Component {
                           id="username"
                           label="Username"
                           value={this.state.profile.username}
-                          onChange={this.handleUsernameChange.bind(this)}
+                          onChange={this.handleUsernameChange}
                           margin="normal"
                       />
                     </Row>
@@ -94,7 +103,7 @@ class App extends Component {
                           id="age"
                           label="Age"
                           value={this.state.profile.username}
-                          onChange={this.handleUsernameChange.bind(this)}
+                          onChange={this.handleUsernameChange}
                           margin="normal"
                       />
                     </Row>
@@ -103,29 +112,69 @@ class App extends Component {
                           id="weight"
                           label="Weight"
                           value={this.state.profile.username}
-                          onChange={this.handleUsernameChange.bind(this)}
+                          onChange={this.handleUsernameChange}
                           margin="normal"
                       />
                     </Row>
                       </Grid>
                 </DialogContent>
-
                 <DialogActions>
-                  <Button onClick={this.handleClose.bind(this)} color="primary">
+                  <Button onClick={this.handleClose} color="primary">
                     Cancel
                   </Button>
-                  <Button onClick={this.createAccount.bind(this)} color="primary">
+                  <Button onClick={this.createAccount} color="primary">
                     Complete
                   </Button>
                 </DialogActions>
               </Dialog>
+              <Dialog
+                  open={this.state.loginDialogOpen}
+                  onClose={this.handleLoginClose}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title">Login</DialogTitle>
+
+                  <DialogContent>
+                    <DialogContentText>
+                      Your private key will not be stored or recorded in our systems.
+                    </DialogContentText>
+                    <Grid>
+                      <Row>
+                        <TextField
+                            id="privateKey"
+                            label="Private Key"
+                            fullWidth
+                            value={this.state.profile.username}
+                            onChange={this.handleUsernameChange}
+                            margin="normal"
+                        />
+                      </Row>
+                        </Grid>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.handleLoginClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={this.login} color="primary">
+                      Login
+                    </Button>
+                  </DialogActions>
+                </Dialog>
             <Button
                 variant="contained"
                 color="primary"
                 size="large"
-                onClick={this.handleOpen.bind(this)}
+                onClick={this.handleOpen}
             >
                 Register
+            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={this.handleLoginOpen}
+            >
+                Login
             </Button>
             </div>
             </Grid>
