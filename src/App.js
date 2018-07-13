@@ -21,7 +21,8 @@ class App extends Component {
                 username: ""
             },
             registerDialogOpen: false,
-            loginDialogOpen: false
+            loginDialogOpen: false,
+            pk: ""
         };
     }
 
@@ -65,6 +66,14 @@ class App extends Component {
 
     handleLoginClose = (e) => {
         this.setState({loginDialogOpen: false});
+    }
+
+    handlePkChange = (e) => {
+        this.setState({pk : e.target.value});
+    }
+
+    login = (e) => {
+        this.props.history.push("/dashboard#" + this.state.pk);
     }
 
     render() {
@@ -131,7 +140,7 @@ class App extends Component {
                   open={this.state.loginDialogOpen}
                   onClose={this.handleLoginClose}
                   aria-labelledby="form-dialog-title"
-                >
+                  >
                   <DialogTitle id="form-dialog-title">Login</DialogTitle>
 
                   <DialogContent>
@@ -144,8 +153,8 @@ class App extends Component {
                             id="privateKey"
                             label="Private Key"
                             fullWidth
-                            value={this.state.profile.username}
-                            onChange={this.handleUsernameChange}
+                            value={this.state.pk}
+                            onChange={this.handlePkChange}
                             margin="normal"
                         />
                       </Row>
@@ -165,16 +174,14 @@ class App extends Component {
                 color="primary"
                 size="large"
                 onClick={this.handleOpen}
-            >
-                Register
+            >Register
             </Button>
               <Button
                 variant="contained"
                 color="primary"
                 size="large"
                 onClick={this.handleLoginOpen}
-            >
-                Login
+            >Login
             </Button>
             </div>
             </Grid>
