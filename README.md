@@ -15,7 +15,7 @@ Contract run:
 Frontend application start:
 
  1) npm install
- 2) npm start
+ 2) sudo PORT=80 npm run start
 
 Account creation process:
 

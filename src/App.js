@@ -36,44 +36,49 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            profile: {
-                username: ""
-            },
+            username: "",
             registerDialogOpen: false,
             loginDialogOpen: false,
+            registerCompleteDialogOpen: false,
             pk: "",
+            address: "",
             mode: "sell"
         };
     }
 
     handleUsernameChange = (e) => {
         this.setState({
-            profile: {
-                username: e.target.value
-            }
+            username: e.target.value
         })
     };
 
     handleAccountChange = (e) => {
         let self = this;
         this.setState({
-            profile: {
-                username: self.state.profile.username
-            }
+            username: self.state.profile.username
         })
     };
 
     createAccount = (e) => {
         const apiUrl = window.API_URL;
         let self = this;
-        axios.get(apiUrl + "user/register?username=" + self.state.profile.username)
+        axios.get(apiUrl + "user/register?username=" + self.state.username)
             .then(result => {
-                console.log(result.data);
+                self.setState({registerDialogOpen: false}, function () {
+                    self.setState({registerCompleteDialogOpen: true});
+                    //{username: "12", privateKey: "ac042a56a49d05546f22c7441d4715574ed2ae85bbe5780c386f1717a37a0435", ipfsHash: "not-available", address: "0x48565e080829e762faf6201038677fd5c5b00949"}
+                    this.setState({username: result.data.username});
+                    this.setState({pk: result.data.privateKey});
+                    this.setState({address: result.data.address});
+                });
             })
     };
 
     handleOpen = (e) => {
         this.setState({registerDialogOpen: true});
+        this.setState({username: ""});
+        this.setState({pk: ""});
+        this.setState({address: ""});
     };
 
     handleLoginOpen = (e) => {
@@ -98,6 +103,10 @@ class App extends Component {
 
     handleModeChange = (e) => {
         this.setState({mode: e.target.value});
+    };
+
+    acknowledge = (e) => {
+        this.setState({registerCompleteDialogOpen: false});
     };
 
     render() {
@@ -127,7 +136,7 @@ class App extends Component {
                                     <TextField
                                         id="username"
                                         label="Username"
-                                        value={this.state.profile.username}
+                                        value={this.state.username}
                                         onChange={this.handleUsernameChange}
                                         margin="normal"
                                     />
@@ -136,7 +145,7 @@ class App extends Component {
                                     <TextField
                                         id="age"
                                         label="Age"
-                                        value={this.state.profile.username}
+                                        value={this.state.username}
                                         onChange={this.handleUsernameChange}
                                         margin="normal"
                                     />
@@ -145,7 +154,7 @@ class App extends Component {
                                     <TextField
                                         id="weight"
                                         label="Weight"
-                                        value={this.state.profile.username}
+                                        value={this.state.username}
                                         onChange={this.handleUsernameChange}
                                         margin="normal"
                                     />
@@ -173,7 +182,8 @@ class App extends Component {
                             </DialogContentText>
                             <Grid>
                                 <Row>
-                                    <FormControl component="fieldset" required fullWidth className={classes.formControl}>
+                                    <FormControl component="fieldset" required fullWidth
+                                                 className={classes.formControl}>
                                         <TextField
                                             id="privateKey"
                                             label="Private Key"
@@ -207,6 +217,49 @@ class App extends Component {
                             </Button>
                             <Button onClick={this.login} color="primary">
                                 Login
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={this.state.registerCompleteDialogOpen}
+                        onClose={this.handleRegisterCompleteClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogTitle id="form-dialog-title">Account Info</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Please store your private key on a safe place.
+                            </DialogContentText>
+                            <Grid>
+                                <Row>
+                                    <FormControl component="fieldset" required fullWidth
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="privateKey"
+                                            label="Private Key"
+                                            fullWidth
+                                            value={this.state.pk}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
+                                </Row>
+                                <Row>
+                                    <FormControl component="fieldset" required fullWidth
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="privateKey"
+                                            label="Address"
+                                            fullWidth
+                                            value={this.state.address}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
+                                </Row>
+                            </Grid>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.acknowledge} color="primary">
+                                Acknowledge
                             </Button>
                         </DialogActions>
                     </Dialog>
