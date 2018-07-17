@@ -1,43 +1,24 @@
-import React, {Component} from 'react';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import 'typeface-roboto';
-import logo from '../Dyno_Logo_small.png';
-import profile from '../Dyno_Logo_small.png';
-import '../App.css';
-import axios from 'axios';
-import {Grid, Row} from 'react-flexbox-grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import Tooltip from '@material-ui/core/Tooltip';
-import {lighten} from '@material-ui/core/styles/colorManipulator';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-
-let counter = 0;
-function createData(user, ipfs, records, action) {
-    counter += 1;
-    return {id: counter, user, ipfs, records, action};
-}
+import React from "react";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import {withStyles} from "@material-ui/core/styles";
+import "typeface-roboto";
+import "../App.css";
+import axios from "axios";
+import Button from "@material-ui/core/Button";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from "@material-ui/core/Tooltip";
+import {lighten} from "@material-ui/core/styles/colorManipulator";
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -186,14 +167,20 @@ class SearchResults extends React.Component {
             order: 'desc',
             orderBy: 'date',
             selected: [],
-            data: [
-                createData('0xd8f0a09790bb2300a5f55ea63079ef55706fb353', 'QmNgozkSLgA5hd6nguiArT29qCj1h8H4U2ei6mZKsVCweD', 4),
-                createData('0xd8f0a09790bb2300a5f55ea63079ef55706fb353', 'QmNgozkSLgA5hd6nguiArT29qCj1h8H4U2ei6mZKsVCweD', 4)
-            ],
+            data: [],
             page: 0,
             rowsPerPage: 5,
         };
     }
+
+    componentDidMount = () => {
+        const apiUrl = window.API_URL;
+        let self = this;
+        axios.get(apiUrl + "search")
+            .then(result => {
+                self.setState({data: result.data});
+            })
+    };
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -250,7 +237,7 @@ class SearchResults extends React.Component {
         const {classes} = this.props;
         const {data, order, orderBy, selected, rowsPerPage, page} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+        var i = 0;
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length}/>
@@ -265,37 +252,39 @@ class SearchResults extends React.Component {
                             rowCount={data.length}
                         />
                         <TableBody>
-                            {data
-                                .sort(getSorting(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map(n => {
-                                    const isSelected = this.isSelected(n.id);
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={event => this.handleClick(event, n.id)}
-                                            role="checkbox"
-                                            aria-checked={isSelected}
-                                            tabIndex={-1}
-                                            key={n.id}
-                                            selected={isSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={isSelected}/>
-                                            </TableCell>
-                                            <TableCell component="th" scope="row" padding="none">
-                                                {n.user}
-                                            </TableCell>
-                                            <TableCell numeric>{n.ipfs}</TableCell>
-                                            <TableCell numeric>{n.records}</TableCell>
-                                            <TableCell numeric>
-                                                <Button color="primary" className={classes.button}>
-                                                    Buy
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                            {
+                                data
+                                    .sort(getSorting(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map(n => {
+                                        n.id = i++;
+                                        const isSelected = this.isSelected(n.id);
+                                        return (
+                                            <TableRow
+                                                hover
+                                                onClick={event => this.handleClick(event, n.id)}
+                                                role="checkbox"
+                                                aria-checked={isSelected}
+                                                tabIndex={-1}
+                                                key={n.id}
+                                                selected={isSelected}
+                                            >
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox checked={isSelected}/>
+                                                </TableCell>
+                                                <TableCell component="th" scope="row" padding="none">
+                                                    {n.address}
+                                                </TableCell>
+                                                <TableCell numeric>{n.ipfsHash}</TableCell>
+                                                <TableCell numeric>0</TableCell>
+                                                <TableCell numeric>
+                                                    <Button color="primary" className={classes.button}>
+                                                        Buy
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
                             {emptyRows > 0 && (
                                 <TableRow style={{height: 49 * emptyRows}}>
                                     <TableCell colSpan={6}/>

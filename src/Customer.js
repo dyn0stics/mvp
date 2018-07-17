@@ -1,17 +1,11 @@
-import React, {Component} from 'react';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import 'typeface-roboto';
-import logo from './Dyno_Logo_small.png';
-import profile from './Dyno_Logo_small.png';
-import './App.css';
-import axios from 'axios';
-import {Grid, Row} from 'react-flexbox-grid';
-import Button from '@material-ui/core/Button';
-import PurchaseOffers from './customer/PurchaseOffers.js';
-import SearchResults from './customer/SearchResults';
+import React, {Component} from "react";
+import {withStyles} from "@material-ui/core/styles";
+import "typeface-roboto";
+import logo from "./Dyno_Logo_small.png";
+import "./App.css";
+import {Grid} from "react-flexbox-grid";
+import PurchaseOffers from "./customer/PurchaseOffers.js";
+import SearchResults from "./customer/SearchResults";
 
 const styles = theme => ({
     card: {
@@ -27,7 +21,6 @@ const styles = theme => ({
 class Customer extends Component {
 
     render() {
-        const {classes} = this.props;
         return (
             <Grid fluid>
                 <div className="App">
