@@ -37,9 +37,10 @@ class Dashboard extends Component {
             <Grid fluid>
                 <div className="App">
                     <header className="App-header">
-                        <img src={logo} className="App-logo" alt="logo"/>
+                        <a href="/">
+                            <img src={logo} className="App-logo" alt="logo"/>
+                        </a>
                     </header>
-
                     <div>
                         <Card className={classes.card}>
                             <CardMedia

@@ -98,7 +98,11 @@ class App extends Component {
     };
 
     login = (e) => {
-        this.props.history.push("/dashboard#" + this.state.pk);
+        if (this.state.mode === "sell") {
+            this.props.history.push("/dashboard#" + this.state.pk);
+        } else if (this.state.mode === "buy") {
+            this.props.history.push("/customer");
+        }
     };
 
     handleModeChange = (e) => {
@@ -115,7 +119,9 @@ class App extends Component {
             <Grid fluid>
                 <div className="App">
                     <header className="App-header">
-                        <img src={logo} className="App-logo" alt="logo"/>
+                        <a href="/">
+                            <img src={logo} className="App-logo" alt="logo"/>
+                        </a>
                     </header>
                     <p className="App-intro">
                         {this.state.nodeInfo}
