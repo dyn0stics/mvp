@@ -1,16 +1,4 @@
 # DYNOSTICS MVP dAPP
-
-Development Instructions:
- 
- 1) sudo npm install -g truffle
- 3) Install https://truffleframework.com/ganache
- 
-Running Ganache on HTTP://127.0.0.1:7545
- 
-Contract run:
-
- 1) truffle compile
- 2) truffle migrate
  
 Frontend application start:
 
@@ -19,4 +7,4 @@ Frontend application start:
 
 Account creation process:
 
- 1) 
+ 1) curl http://<host>:<port>/register?=<username>
