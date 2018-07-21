@@ -37,6 +37,10 @@ class App extends Component {
         super(props);
         this.state = {
             username: "",
+            age: "",
+            weight: "",
+            gender: "",
+            country: "",
             registerDialogOpen: false,
             loginDialogOpen: false,
             registerCompleteDialogOpen: false,
@@ -49,6 +53,26 @@ class App extends Component {
     handleUsernameChange = (e) => {
         this.setState({
             username: e.target.value
+        })
+    };
+    handleAgeChange = (e) => {
+        this.setState({
+            age: e.target.value
+        })
+    };
+    handleWeightChange = (e) => {
+        this.setState({
+            weight: e.target.value
+        })
+    };
+    handleGenderChange = (e) => {
+        this.setState({
+            gender: e.target.value
+        })
+    };
+    handleCountryChange = (e) => {
+        this.setState({
+            country: e.target.value
         })
     };
 
@@ -66,7 +90,6 @@ class App extends Component {
             .then(result => {
                 self.setState({registerDialogOpen: false}, function () {
                     self.setState({registerCompleteDialogOpen: true});
-                    //{username: "12", privateKey: "ac042a56a49d05546f22c7441d4715574ed2ae85bbe5780c386f1717a37a0435", ipfsHash: "not-available", address: "0x48565e080829e762faf6201038677fd5c5b00949"}
                     this.setState({username: result.data.username});
                     this.setState({pk: result.data.privateKey});
                     this.setState({address: result.data.address});
@@ -139,31 +162,64 @@ class App extends Component {
                             </DialogContentText>
                             <Grid>
                                 <Row>
-                                    <TextField
-                                        id="username"
-                                        label="Username"
-                                        value={this.state.username}
-                                        onChange={this.handleUsernameChange}
-                                        margin="normal"
-                                    />
+                                    <FormControl component="fieldset" required
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="username"
+                                            label="Username"
+                                            value={this.state.username}
+                                            onChange={this.handleUsernameChange}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
                                 </Row>
                                 <Row>
-                                    <TextField
-                                        id="age"
-                                        label="Age"
-                                        value={this.state.username}
-                                        onChange={this.handleUsernameChange}
-                                        margin="normal"
-                                    />
+                                    <FormControl component="fieldset" required
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="age"
+                                            label="Age"
+                                            value={this.state.age}
+                                            onChange={this.handleAgeChange}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
                                 </Row>
                                 <Row>
-                                    <TextField
-                                        id="weight"
-                                        label="Weight"
-                                        value={this.state.username}
-                                        onChange={this.handleUsernameChange}
-                                        margin="normal"
-                                    />
+                                    <FormControl component="fieldset" required
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="weight"
+                                            label="Weight"
+                                            value={this.state.weight}
+                                            onChange={this.handleWeightChange}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
+                                </Row>
+                                <Row>
+                                    <FormControl component="fieldset" required
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="gender"
+                                            label="Gender"
+                                            value={this.state.gender}
+                                            onChange={this.handleGenderChange}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
+                                </Row>
+                                <Row>
+                                    <FormControl component="fieldset" required
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="country"
+                                            label="Country"
+                                            value={this.state.country}
+                                            onChange={this.handleCountryChange}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
                                 </Row>
                             </Grid>
                         </DialogContent>
