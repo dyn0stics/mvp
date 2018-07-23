@@ -11,7 +11,7 @@ const Root = () => {
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={App}/>
-                <Route exact path="/dashboard" component={Dashboard}/>
+                <Route exact path="/dashboard/:pk" component={Dashboard}/>
                 <Route exact path="/customer" component={Customer}/>
             </Switch>
         </BrowserRouter>

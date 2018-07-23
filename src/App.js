@@ -122,7 +122,7 @@ class App extends Component {
 
     login = (e) => {
         if (this.state.mode === "sell") {
-            this.props.history.push("/dashboard#" + this.state.pk);
+            this.props.history.push("/dashboard/" + this.state.pk);
         } else if (this.state.mode === "buy") {
             this.props.history.push("/customer");
         }

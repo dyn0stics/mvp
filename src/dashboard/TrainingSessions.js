@@ -17,12 +17,7 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-
-let counter = 0;
-function createData(device, date, link, status) {
-    counter += 1;
-    return {id: counter, device, date, link, status};
-}
+import BackupIcon from '@material-ui/icons/Backup';
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -33,8 +28,9 @@ function getSorting(order, orderBy) {
 const columnData = [
     {id: 'device', numeric: false, disablePadding: true, label: 'Device'},
     {id: 'date', numeric: true, disablePadding: false, label: 'Date'},
-    {id: 'link', numeric: true, disablePadding: false, label: 'Link'},
-    {id: 'status', numeric: true, disablePadding: false, label: 'Status'}
+    {id: 'measured_quantity', numeric: true, disablePadding: false, label: 'Measured Quantity'},
+    {id: 'measurement_type', numeric: true, disablePadding: false, label: 'Measurement Type'},
+     {id: 'link', numeric: true, disablePadding: false, label: 'IPFS Link'}
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -171,10 +167,6 @@ class EnhancedTable extends React.Component {
             order: 'desc',
             orderBy: 'date',
             selected: [],
-            data: [
-                createData('DYNO', '13/07/2018', 'not-available', 'synced'),
-                createData('DYNO', '12/07/2018', 'not-available', 'synced')
-            ],
             page: 0,
             rowsPerPage: 5,
         };
@@ -233,7 +225,8 @@ class EnhancedTable extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {data, order, orderBy, selected, rowsPerPage, page} = this.state;
+        const {order, orderBy, selected, rowsPerPage, page} = this.state;
+        const data = this.props.data === null ? [] : this.props.data;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
@@ -269,11 +262,12 @@ class EnhancedTable extends React.Component {
                                                 <Checkbox checked={isSelected}/>
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
-                                                {n.device}
+                                                {n.app_user_agent}
                                             </TableCell>
-                                            <TableCell numeric>{n.date}</TableCell>
-                                            <TableCell numeric>{n.link}</TableCell>
-                                            <TableCell numeric>{n.status}</TableCell>
+                                            <TableCell numeric>{n.measured_at}</TableCell>
+                                            <TableCell numeric>{n.measured_quantity}</TableCell>
+                                            <TableCell numeric>{n.measurement_type}</TableCell>
+                                            <TableCell numeric><BackupIcon /></TableCell>
                                         </TableRow>
                                     );
                                 })}

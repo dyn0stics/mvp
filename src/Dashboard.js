@@ -5,6 +5,7 @@ import "typeface-roboto";
 import logo from "./Dyno_Logo_small.png";
 import profile from "./Dyno_Logo_small.png";
 import "./App.css";
+import axios from "axios";
 import {Grid} from "react-flexbox-grid";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -25,7 +26,32 @@ const styles = theme => ({
     },
 });
 
+
+
 class Dashboard extends Component {
+
+   constructor(props) {
+        super(props);
+        this.state = {
+            data: {
+                username: "",
+                address: "",
+            },
+            workout: null
+        };
+    }
+
+    componentDidMount() {
+       const apiUrl = window.API_URL;
+       let self = this;
+       axios.get(apiUrl + "user/profile?pk=" + self.props.match.params.pk)
+           .then(result => {
+               self.setState({loginDialogOpen: false}, () => {
+                    self.setState({data: result.data});
+                    self.setState({workout: JSON.parse(result.data.data.workoutData)});
+               });
+           })
+    }
 
     render() {
         const {classes} = this.props;
@@ -42,11 +68,10 @@ class Dashboard extends Component {
                             <CardMedia
                                 className={classes.media}
                                 image={profile}
-                                title="Contemplative Reptile"
                             />
                             <CardContent>
                                 <Typography gutterBottom variant="headline" component="h2">
-                                    Matthias S.
+                                    {this.state.data.username}
                                 </Typography>
                                 <Typography component="p">
                                     DYNO 150
@@ -54,13 +79,13 @@ class Dashboard extends Component {
                             </CardContent>
                             <CardActions>
                                 <Button size="small" color="primary">
-                                    0x501dbf48d1e29179e395dbaa8896d9ff0bacbff8
+                                    {this.state.data.address}
                                 </Button>
                             </CardActions>
                         </Card>
                     </div>
                     <PurchaseOffers />
-                    <TrainingSessions />
+                    <TrainingSessions data={this.state.workout} />
                 </div>
             </Grid>
         );
