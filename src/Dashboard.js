@@ -27,10 +27,9 @@ const styles = theme => ({
 });
 
 
-
 class Dashboard extends Component {
 
-   constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             data: {
@@ -42,15 +41,15 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-       const apiUrl = window.API_URL;
-       let self = this;
-       axios.get(apiUrl + "user/profile?pk=" + self.props.match.params.pk)
-           .then(result => {
-               self.setState({loginDialogOpen: false}, () => {
+        const apiUrl = window.API_URL;
+        let self = this;
+        axios.get(apiUrl + "user/profile?pk=" + self.props.match.params.pk)
+            .then(result => {
+                self.setState({loginDialogOpen: false}, () => {
                     self.setState({data: result.data});
                     self.setState({workout: JSON.parse(result.data.data.workoutData)});
-               });
-           })
+                });
+            })
     }
 
     render() {
@@ -85,7 +84,7 @@ class Dashboard extends Component {
                         </Card>
                     </div>
                     <PurchaseOffers />
-                    <TrainingSessions data={this.state.workout} />
+                    <TrainingSessions data={this.state.workout}/>
                 </div>
             </Grid>
         );

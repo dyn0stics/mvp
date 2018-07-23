@@ -30,7 +30,7 @@ const columnData = [
     {id: 'date', numeric: true, disablePadding: false, label: 'Date'},
     {id: 'measured_quantity', numeric: true, disablePadding: false, label: 'Measured Quantity'},
     {id: 'measurement_type', numeric: true, disablePadding: false, label: 'Measurement Type'},
-     {id: 'link', numeric: true, disablePadding: false, label: 'IPFS Link'}
+    {id: 'link', numeric: true, disablePadding: false, label: 'IPFS Link'}
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -228,7 +228,7 @@ class EnhancedTable extends React.Component {
         const {order, orderBy, selected, rowsPerPage, page} = this.state;
         const data = this.props.data === null ? [] : this.props.data;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+console.log(this.props.data);
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length}/>
