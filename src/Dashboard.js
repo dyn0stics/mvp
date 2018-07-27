@@ -84,7 +84,7 @@ class Dashboard extends Component {
                         </Card>
                     </div>
                     <PurchaseOffers />
-                    <TrainingSessions data={this.state.workout}/>
+                    <TrainingSessions data={this.state.workout} profile={this.state.data}/>
                 </div>
             </Grid>
         );

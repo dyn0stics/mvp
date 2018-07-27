@@ -227,6 +227,7 @@ class EnhancedTable extends React.Component {
         const {classes} = this.props;
         const {order, orderBy, selected, rowsPerPage, page} = this.state;
         const data = this.props.data === null ? [] : this.props.data;
+        const profile = this.props.profile === null ? [] : this.props.profile;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 console.log(this.props.data);
         return (
@@ -267,7 +268,7 @@ console.log(this.props.data);
                                             <TableCell numeric>{n.measured_at}</TableCell>
                                             <TableCell numeric>{n.measured_quantity}</TableCell>
                                             <TableCell numeric>{n.measurement_type}</TableCell>
-                                            <TableCell numeric><BackupIcon /></TableCell>
+                                            <TableCell numeric><a href={'http://' + profile.ipfsHash}><BackupIcon /></a></TableCell>
                                         </TableRow>
                                     );
                                 })}
