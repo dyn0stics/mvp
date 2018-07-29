@@ -1,0 +1,12 @@
+[Unit]
+Description=DYNO Frontend
+After=network.target
+
+[Service]
+User=root
+Environment=PORT=80
+ExecStart=/usr/bin/npm run start --prefix /root/mvp-frontend/
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
