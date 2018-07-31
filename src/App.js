@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 import "typeface-roboto";
 import logo from "./Dyno_Logo_small.png";
+import bg from "./bg.png";
 import "./App.css";
 import axios from "axios";
 import {Grid, Row} from "react-flexbox-grid";
@@ -25,6 +26,9 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit * 3,
+    },
+    button: {
+        margin: theme.spacing.unit,
     },
     group: {
         margin: `${theme.spacing.unit}px 0`,
@@ -146,9 +150,7 @@ class App extends Component {
                             <img src={logo} className="App-logo" alt="logo"/>
                         </a>
                     </header>
-                    <p className="App-intro">
-                        {this.state.nodeInfo}
-                    </p>
+                    <img src={bg} className="App-bg" alt="bg"/>
                     <Dialog
                         open={this.state.registerDialogOpen}
                         onClose={this.handleClose}
@@ -329,6 +331,7 @@ class App extends Component {
                         variant="contained"
                         color="primary"
                         size="large"
+                        className={classes.button}
                         onClick={this.handleOpen}
                     >Register
                     </Button>
@@ -336,6 +339,7 @@ class App extends Component {
                         variant="contained"
                         color="primary"
                         size="large"
+                        className={classes.button}
                         onClick={this.handleLoginOpen}
                     >Login
                     </Button>

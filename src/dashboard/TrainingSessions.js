@@ -14,10 +14,15 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-import BackupIcon from '@material-ui/icons/Backup';
+import BackupIcon from "@material-ui/icons/Backup";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -45,11 +50,6 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     <TableCell padding="checkbox">
-                        <Checkbox
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                        />
                     </TableCell>
                     {columnData.map(column => {
                         return (
@@ -119,20 +119,14 @@ let EnhancedTableToolbar = props => {
 
     return (
         <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
+            className={classNames(classes.root)}
         >
             <div className={classes.title}>
-                {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subheading">
-                        {numSelected} selected
-                    </Typography>
-                ) : (
+                {
                     <Typography variant="title" id="tableTitle">
                         Stored Training Sessions
                     </Typography>
-                )}
+                }
             </div>
             <div className={classes.spacer}/>
         </Toolbar>
@@ -169,6 +163,7 @@ class EnhancedTable extends React.Component {
             selected: [],
             page: 0,
             rowsPerPage: 5,
+            ipfsDialogOpen: false,
         };
     }
 
@@ -222,12 +217,19 @@ class EnhancedTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+    handleIPFSLink = (event) => {
+        this.setState({ipfsDialogOpen: true});
+    };
+
+    closeIpfsDialog = () => {
+        this.setState({ipfsDialogOpen: false});
+    };
+
 
     render() {
         const {classes} = this.props;
         const {order, orderBy, selected, rowsPerPage, page} = this.state;
         const data = this.props.data === null ? [] : this.props.data;
-        const profile = this.props.profile === null ? [] : this.props.profile;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 console.log(this.props.data);
         return (
@@ -260,7 +262,7 @@ console.log(this.props.data);
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
-                                                <Checkbox checked={isSelected}/>
+
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
                                                 {n.app_user_agent}
@@ -268,7 +270,7 @@ console.log(this.props.data);
                                             <TableCell numeric>{n.measured_at}</TableCell>
                                             <TableCell numeric>{n.measured_quantity}</TableCell>
                                             <TableCell numeric>{n.measurement_type}</TableCell>
-                                            <TableCell numeric><a href={'http://' + profile.ipfsHash}><BackupIcon /></a></TableCell>
+                                            <TableCell numeric><BackupIcon onClick={this.handleIPFSLink} /></TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -294,6 +296,23 @@ console.log(this.props.data);
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
+                <Dialog
+                    open={this.state.ipfsDialogOpen}
+                    onClose={this.ipfsCompleteClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Training Session</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {JSON.stringify(this.props.data)}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.closeIpfsDialog} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
         );
     }

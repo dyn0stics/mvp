@@ -3,7 +3,7 @@ import {withStyles} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import "typeface-roboto";
 import logo from "./Dyno_Logo_small.png";
-import profile from "./Dyno_Logo_small.png";
+import profile from "./profile.png";
 import "./App.css";
 import axios from "axios";
 import {Grid} from "react-flexbox-grid";
@@ -22,7 +22,7 @@ const styles = theme => ({
     },
     media: {
         height: 0,
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '80%',
     },
 });
 
