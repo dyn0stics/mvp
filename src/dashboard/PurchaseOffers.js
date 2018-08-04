@@ -32,9 +32,9 @@ function getSorting(order, orderBy) {
 }
 
 const columnData = [
-    {id: 'client', numeric: false, disablePadding: true, label: 'Client'},
-    {id: 'price', numeric: true, disablePadding: false, label: 'Price'},
-    {id: 'date', numeric: true, disablePadding: false, label: 'Date'},
+    {id: 'buyer', numeric: false, disablePadding: true, label: 'Buyer'},
+    {id: 'publicKey', numeric: true, disablePadding: false, label: 'Public Key'},
+    {id: 'amount', numeric: true, disablePadding: false, label: 'Amount'},
     {id: 'action', numeric: true, disablePadding: false, label: 'Action'}
 ];
 
@@ -50,11 +50,6 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     <TableCell padding="checkbox">
-                        <Checkbox
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                        />
                     </TableCell>
                     {columnData.map(column => {
                         return (
@@ -124,20 +119,14 @@ let EnhancedTableToolbar = props => {
 
     return (
         <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
+            className={classNames(classes.root)}
         >
             <div className={classes.title}>
-                {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subheading">
-                        {numSelected} selected
-                    </Typography>
-                ) : (
+                {
                     <Typography variant="title" id="tableTitle">
-                        Purchase Offers
+                        Data Purchase Offers
                     </Typography>
-                )}
+                }
             </div>
             <div className={classes.spacer}/>
         </Toolbar>
@@ -172,10 +161,6 @@ class EnhancedTable extends React.Component {
             order: 'desc',
             orderBy: 'date',
             selected: [],
-            data: [
-                createData('FC Barcelona', '2500 DYNO', '13/07/2018', '-'),
-                createData('FC Bayern', '1250 DYNO', '13/07/2018', '-')
-            ],
             page: 0,
             rowsPerPage: 5,
         };
@@ -234,9 +219,9 @@ class EnhancedTable extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {data, order, orderBy, selected, rowsPerPage, page} = this.state;
+        const {order, orderBy, selected, rowsPerPage, page} = this.state;
+        const data = (this.props.data === null || this.props.data === undefined) ? [] : this.props.data;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length}/>
@@ -267,13 +252,12 @@ class EnhancedTable extends React.Component {
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
-                                                <Checkbox checked={isSelected}/>
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
-                                                {n.client}
+                                                {n.buyer}
                                             </TableCell>
-                                            <TableCell numeric>{n.price}</TableCell>
-                                            <TableCell numeric>{n.date}</TableCell>
+                                            <TableCell numeric>{n.buyerPublicKey}</TableCell>
+                                            <TableCell numeric>{n.amount}</TableCell>
                                             <TableCell numeric>
                                                 <Button color="primary" className={classes.button}>
                                                     Accept

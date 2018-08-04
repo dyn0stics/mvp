@@ -19,6 +19,12 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
+import BackupIcon from "@material-ui/icons/Backup";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -29,7 +35,7 @@ function getSorting(order, orderBy) {
 const columnData = [
     {id: 'user', numeric: false, disablePadding: true, label: 'User Address'},
     {id: 'ipfs', numeric: true, disablePadding: false, label: 'IPFS Hash'},
-    {id: 'records', numeric: true, disablePadding: false, label: 'Nr. of Records'},
+    {id: 'data', numeric: true, disablePadding: false, label: 'Data'},
     {id: 'action', numeric: true, disablePadding: false, label: 'Action'}
 ];
 
@@ -45,11 +51,7 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     <TableCell padding="checkbox">
-                        <Checkbox
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                        />
+                        
                     </TableCell>
                     {columnData.map(column => {
                         return (
@@ -119,20 +121,14 @@ let EnhancedTableToolbar = props => {
 
     return (
         <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
+            className={classNames(classes.root)}
         >
             <div className={classes.title}>
-                {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subheading">
-                        {numSelected} selected
-                    </Typography>
-                ) : (
+                {
                     <Typography variant="title" id="tableTitle">
-                        Results
+                        Search Results
                     </Typography>
-                )}
+                }
             </div>
             <div className={classes.spacer}/>
         </Toolbar>
@@ -170,6 +166,7 @@ class SearchResults extends React.Component {
             data: [],
             page: 0,
             rowsPerPage: 5,
+            ipfsDialogOpen: false,
         };
     }
 
@@ -232,6 +229,13 @@ class SearchResults extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+    handleIPFSLink = (event) => {
+        this.setState({ipfsDialogOpen: true});
+    };
+
+    closeIpfsDialog = () => {
+        this.setState({ipfsDialogOpen: false});
+    };
 
     render() {
         const {classes} = this.props;
@@ -270,13 +274,13 @@ class SearchResults extends React.Component {
                                                 selected={isSelected}
                                             >
                                                 <TableCell padding="checkbox">
-                                                    <Checkbox checked={isSelected}/>
+
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" padding="none">
                                                     {n.address}
                                                 </TableCell>
                                                 <TableCell numeric>{n.ipfsHash}</TableCell>
-                                                <TableCell numeric>0</TableCell>
+                                                <TableCell numeric><BackupIcon onClick={this.handleIPFSLink} /></TableCell>
                                                 <TableCell numeric>
                                                     <Button color="primary" className={classes.button}>
                                                         Buy
@@ -307,6 +311,23 @@ class SearchResults extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
+                <Dialog
+                    open={this.state.ipfsDialogOpen}
+                    onClose={this.ipfsCompleteClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Training Session</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {JSON.stringify(this.props.data)}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.closeIpfsDialog} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
         );
     }

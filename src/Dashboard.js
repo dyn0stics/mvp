@@ -35,6 +35,7 @@ class Dashboard extends Component {
             data: {
                 username: "",
                 address: "",
+                balance: "",
             },
             workout: null
         };
@@ -73,7 +74,7 @@ class Dashboard extends Component {
                                     {this.state.data.username}
                                 </Typography>
                                 <Typography component="p">
-                                    DYNO 150
+                                    DYNO {this.state.data.balance}
                                 </Typography>
                             </CardContent>
                             <CardActions>
@@ -83,8 +84,8 @@ class Dashboard extends Component {
                             </CardActions>
                         </Card>
                     </div>
-                    <PurchaseOffers />
                     <TrainingSessions data={this.state.workout} profile={this.state.data}/>
+                    <PurchaseOffers data={this.state.data.purchaseOffers} />
                 </div>
             </Grid>
         );

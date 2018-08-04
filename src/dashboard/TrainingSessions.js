@@ -231,7 +231,6 @@ class EnhancedTable extends React.Component {
         const {order, orderBy, selected, rowsPerPage, page} = this.state;
         const data = this.props.data === null ? [] : this.props.data;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-console.log(this.props.data);
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length}/>
