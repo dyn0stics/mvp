@@ -244,7 +244,6 @@ class EnhancedTable extends React.Component {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n.id)}
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}

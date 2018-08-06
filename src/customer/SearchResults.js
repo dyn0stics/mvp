@@ -16,7 +16,6 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
 import BackupIcon from "@material-ui/icons/Backup";
@@ -25,6 +24,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -39,6 +39,8 @@ const columnData = [
     {id: 'action', numeric: true, disablePadding: false, label: 'Action'}
 ];
 
+const apiUrl = window.API_URL;
+
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
         this.props.onRequestSort(event, property);
@@ -51,7 +53,7 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     <TableCell padding="checkbox">
-                        
+
                     </TableCell>
                     {columnData.map(column => {
                         return (
@@ -164,6 +166,13 @@ class SearchResults extends React.Component {
             orderBy: 'date',
             selected: [],
             data: [],
+            loadDialogOpen: false,
+            purchaseDialogOpen: false,
+            purchase: {
+                address: "",
+                price: "",
+            },
+            ipfs: null,
             page: 0,
             rowsPerPage: 5,
             ipfsDialogOpen: false,
@@ -171,12 +180,17 @@ class SearchResults extends React.Component {
     }
 
     componentDidMount = () => {
-        const apiUrl = window.API_URL;
         let self = this;
+        this.setState({loadDialogOpen: true});
         axios.get(apiUrl + "search")
             .then(result => {
-                self.setState({data: result.data});
+                self.setState({data: result.data}, () => {
+                    self.setState({loadDialogOpen: false});
+                });
             })
+            .catch(ex => {
+                self.setState({loadDialogOpen: false});
+            });
     };
 
     handleRequestSort = (event, property) => {
@@ -229,12 +243,29 @@ class SearchResults extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-    handleIPFSLink = (event) => {
-        this.setState({ipfsDialogOpen: true});
+    handleIPFSLink = (event, hash) => {
+        let self = this;
+        this.setState({loadDialogOpen: true});
+        axios.get(apiUrl + "ipfs?hash=" + hash)
+            .then(result => {
+                this.setState({ipfs: result.data}, () => {
+                    this.setState({ipfsDialogOpen: true}, () => {
+                        self.setState({loadDialogOpen: false});
+                    });
+                });
+            })
+            .catch(ex => {
+                self.setState({loadDialogOpen: false});
+            });
     };
 
     closeIpfsDialog = () => {
         this.setState({ipfsDialogOpen: false});
+    };
+
+    handleBuy = (event, address) => {
+      this.setState({purchaseDialogOpen: true});
+
     };
 
     render() {
@@ -243,92 +274,126 @@ class SearchResults extends React.Component {
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
         var i = 0;
         return (
-            <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length}/>
-                <div className={classes.tableWrapper}>
-                    <Table className={classes.table} aria-labelledby="tableTitle">
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={this.handleSelectAllClick}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={data.length}
-                        />
-                        <TableBody>
-                            {
-                                data
-                                    .sort(getSorting(order, orderBy))
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map(n => {
-                                        n.id = i++;
-                                        const isSelected = this.isSelected(n.id);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                onClick={event => this.handleClick(event, n.id)}
-                                                role="checkbox"
-                                                aria-checked={isSelected}
-                                                tabIndex={-1}
-                                                key={n.id}
-                                                selected={isSelected}
-                                            >
-                                                <TableCell padding="checkbox">
+            <div>
+                <Paper>
 
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    {n.address}
-                                                </TableCell>
-                                                <TableCell numeric>{n.ipfsHash}</TableCell>
-                                                <TableCell numeric><BackupIcon onClick={this.handleIPFSLink} /></TableCell>
-                                                <TableCell numeric>
-                                                    <Button color="primary" className={classes.button}>
-                                                        Buy
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                            {emptyRows > 0 && (
-                                <TableRow style={{height: 49 * emptyRows}}>
-                                    <TableCell colSpan={6}/>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-                <TablePagination
-                    component="div"
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    backIconButtonProps={{
-                        'aria-label': 'Previous Page',
-                    }}
-                    nextIconButtonProps={{
-                        'aria-label': 'Next Page',
-                    }}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-                <Dialog
-                    open={this.state.ipfsDialogOpen}
-                    onClose={this.ipfsCompleteClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Training Session</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {JSON.stringify(this.props.data)}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.closeIpfsDialog} color="primary">
-                            Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Paper>
+                </Paper>
+                <Paper className={classes.root}>
+                    <EnhancedTableToolbar numSelected={selected.length}/>
+                    <div className={classes.tableWrapper}>
+                        <Table className={classes.table} aria-labelledby="tableTitle">
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={this.handleSelectAllClick}
+                                onRequestSort={this.handleRequestSort}
+                                rowCount={data.length}
+                            />
+                            <TableBody>
+                                {
+                                    data
+                                        .sort(getSorting(order, orderBy))
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map(n => {
+                                            n.id = i++;
+                                            const isSelected = this.isSelected(n.id);
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    role="checkbox"
+                                                    aria-checked={isSelected}
+                                                    tabIndex={-1}
+                                                    key={n.id}
+                                                    selected={isSelected}
+                                                >
+                                                    <TableCell padding="checkbox">
+
+                                                    </TableCell>
+                                                    <TableCell component="th" scope="row" padding="none">
+                                                        {n.address}
+                                                    </TableCell>
+                                                    <TableCell numeric>{n.ipfsHash}</TableCell>
+                                                    <TableCell numeric>
+                                                        <BackupIcon
+                                                            onClick={event => this.handleIPFSLink(event, n.ipfsHash)}/>
+                                                    </TableCell>
+                                                    <TableCell numeric>
+                                                        <Button
+                                                            color="primary"
+                                                            className={classes.button}
+                                                            onClick={event => this.handleBuy(event, n.address)}
+                                                        >
+                                                            Buy
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{height: 49 * emptyRows}}>
+                                        <TableCell colSpan={6}/>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={data.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        backIconButtonProps={{
+                            'aria-label': 'Previous Page',
+                        }}
+                        nextIconButtonProps={{
+                            'aria-label': 'Next Page',
+                        }}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
+                    <Dialog
+                        open={this.state.ipfsDialogOpen}
+                        onClose={this.closeIpfsDialog}
+                        aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Training Session</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                {JSON.stringify(this.state.ipfs)}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeIpfsDialog} color="primary">
+                                Close
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        open={this.state.purchaseDialogOpen}
+                        onClose={this.closePurchaseDialog}
+                        aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Purchase Offer</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closePurchaseDialog} color="primary">
+                                Close
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        open={this.state.loadDialogOpen}>
+                        <DialogContent>
+                            <CircularProgress />
+                        </DialogContent>
+                    </Dialog>
+                </Paper>
+            </div>
         );
     }
 }
