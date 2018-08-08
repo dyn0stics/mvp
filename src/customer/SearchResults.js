@@ -180,6 +180,7 @@ class SearchResults extends React.Component {
             page: 0,
             rowsPerPage: 5,
             ipfsDialogOpen: false,
+            pk: ""
         };
     }
 
@@ -195,6 +196,7 @@ class SearchResults extends React.Component {
             .catch(ex => {
                 self.setState({loadDialogOpen: false});
             });
+        this.setState({pk: self.props.pk});
     };
 
     handleRequestSort = (event, property) => {
@@ -293,7 +295,16 @@ class SearchResults extends React.Component {
     };
 
     sendPurchaseOffer = () => {
-
+        var self = this;
+        this.setState({loadDialogOpen: true});
+        axios.get(apiUrl + "purchase?address=" + this.state.purchase.address + "&price=" + this.state.purchase.price + "&pk=" + this.state.pk)
+            .then(result => {
+                self.setState({loadDialogOpen: false});
+                this.setState({purchaseDialogOpen: false});
+            })
+            .catch(ex => {
+                self.setState({loadDialogOpen: false});
+            });
     };
 
 

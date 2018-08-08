@@ -20,6 +20,10 @@ const styles = theme => ({
 
 class Customer extends Component {
 
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         return (
             <Grid fluid>
@@ -32,7 +36,7 @@ class Customer extends Component {
 
                     <div>
                     </div>
-                    <SearchResults />
+                    <SearchResults pk={this.props.match.params.pk}/>
                     <PurchaseOffers />
                 </div>
             </Grid>

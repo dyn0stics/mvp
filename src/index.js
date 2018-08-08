@@ -12,7 +12,7 @@ const Root = () => {
             <Switch>
                 <Route exact path="/" component={App}/>
                 <Route exact path="/dashboard/:pk" component={Dashboard}/>
-                <Route exact path="/customer" component={Customer}/>
+                <Route exact path="/customer/:pk" component={Customer}/>
             </Switch>
         </BrowserRouter>
     )

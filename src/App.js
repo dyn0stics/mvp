@@ -128,7 +128,7 @@ class App extends Component {
         if (this.state.mode === "sell") {
             this.props.history.push("/dashboard/" + this.state.pk);
         } else if (this.state.mode === "buy") {
-            this.props.history.push("/customer");
+            this.props.history.push("/customer/" + this.state.pk);
         }
     };
 
