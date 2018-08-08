@@ -24,7 +24,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {Grid, Row} from "react-flexbox-grid";
+import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -163,7 +167,7 @@ class SearchResults extends React.Component {
 
         this.state = {
             order: 'desc',
-            orderBy: 'date',
+            orderBy: 'address',
             selected: [],
             data: [],
             loadDialogOpen: false,
@@ -263,10 +267,35 @@ class SearchResults extends React.Component {
         this.setState({ipfsDialogOpen: false});
     };
 
+    closePurchaseDialog = () => {
+        this.setState({purchaseDialogOpen: false});
+    };
+
     handleBuy = (event, address) => {
-      this.setState({purchaseDialogOpen: true});
+        this.setState({purchaseDialogOpen: true});
+        var self = this;
+        this.setState({
+            purchase: {
+                address: address,
+                price: self.state.purchase.price
+            }
+        })
+    };
+
+    handleAmountChange = (event) => {
+        var self = this;
+        this.setState({
+            purchase: {
+                address: self.state.purchase.address,
+                price: event.target.value
+            }
+        })
+    };
+
+    sendPurchaseOffer = () => {
 
     };
+
 
     render() {
         const {classes} = this.props;
@@ -373,15 +402,40 @@ class SearchResults extends React.Component {
                         open={this.state.purchaseDialogOpen}
                         onClose={this.closePurchaseDialog}
                         aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Purchase Offer</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Create Purchase Offer</DialogTitle>
                         <DialogContent>
-                            <DialogContentText>
-
-                            </DialogContentText>
+                            <Grid>
+                                <Row>
+                                    <FormControl component="fieldset" required fullWidth
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="address"
+                                            label="Address"
+                                            value={this.state.purchase.address}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
+                                </Row>
+                                <Row>
+                                    <FormControl component="fieldset" required
+                                                 className={classes.formControl}>
+                                        <TextField
+                                            id="Amount"
+                                            label="Amount (DYNO)"
+                                            value={this.state.purchase.price}
+                                            onChange={this.handleAmountChange}
+                                            margin="normal"
+                                        />
+                                    </FormControl>
+                                </Row>
+                            </Grid>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={this.closePurchaseDialog} color="primary">
                                 Close
+                            </Button>
+                            <Button onClick={this.sendPurchaseOffer} color="primary">
+                                Send
                             </Button>
                         </DialogActions>
                     </Dialog>
