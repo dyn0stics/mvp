@@ -28,6 +28,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {Grid, Row} from "react-flexbox-grid";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import Slider from "@material-ui/lab/Slider";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 
 function getSorting(order, orderBy) {
@@ -43,6 +48,19 @@ const columnData = [
     {id: 'action', numeric: true, disablePadding: false, label: 'Action'}
 ];
 
+const countries = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+];
+
 const apiUrl = window.API_URL;
 
 class EnhancedTableHead extends React.Component {
@@ -51,7 +69,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const {onSelectAllClick, order, orderBy, numSelected, rowCount} = this.props;
+        const {order, orderBy} = this.props;
 
         return (
             <TableHead>
@@ -132,7 +150,7 @@ let EnhancedTableToolbar = props => {
             <div className={classes.title}>
                 {
                     <Typography variant="title" id="tableTitle">
-                        Search Results
+
                     </Typography>
                 }
             </div>
@@ -155,6 +173,11 @@ const styles = theme => ({
     },
     table: {
         minWidth: 1020,
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+        maxWidth: 300,
     },
     tableWrapper: {
         overflowX: 'auto',
@@ -180,7 +203,9 @@ class SearchResults extends React.Component {
             page: 0,
             rowsPerPage: 5,
             ipfsDialogOpen: false,
-            pk: ""
+            pk: "",
+            age: 50,
+            countries: [],
         };
     }
 
@@ -307,6 +332,9 @@ class SearchResults extends React.Component {
             });
     };
 
+    handleAgeChange = (event, value) => {
+        this.setState({age: value});
+    };
 
     render() {
         const {classes} = this.props;
@@ -315,10 +343,60 @@ class SearchResults extends React.Component {
         var i = 0;
         return (
             <div>
-                <Paper>
-
-                </Paper>
                 <Paper className={classes.root}>
+                    <Grid>
+                        <Row>
+                            <FormControl component="fieldset" required
+                                         className={classes.formControl}>
+                                <Typography id="label">Max Age</Typography>
+                                <Slider value={this.state.age} aria-labelledby="label"
+                                        onChange={this.handleAgeChange}/>
+                            </FormControl>
+                            <FormControl component="fieldset" required
+                                         className={classes.formControl}>
+                                <Typography id="label">Max Weigth</Typography>
+                                <Slider value={this.state.age} aria-labelledby="label"
+                                        onChange={this.handleAgeChange}/>
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="select-multiple">Name</InputLabel>
+                                <Select
+                                    multiple
+                                    value={this.state.name}
+                                    onChange={this.handleChange}
+                                    input={<Input id="select-multiple"/>}
+                                    MenuProps={MenuProps}
+                                >
+                                    {countries.map(name => (
+                                        <MenuItem
+                                            key={name}
+                                            value={name}
+                                            style={{
+                                                fontWeight: this.state.countries.indexOf(name) === -1
+                                                    ? theme.typography.fontWeightRegular
+                                                    : theme.typography.fontWeightMedium,
+                                            }}
+                                        >
+                                            {name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl component="fieldset" required
+                                         className={classes.formControl}>
+                                <TextField
+                                    id="Amount"
+                                    label="Amount (DYNO)"
+                                    value={this.state.purchase.price}
+                                    onChange={this.handleAmountChange}
+                                    margin="normal"
+                                />
+                            </FormControl>
+                            <Button onClick={this.search} color="primary">
+                                Search
+                            </Button>
+                        </Row>
+                    </Grid>
                     <EnhancedTableToolbar numSelected={selected.length}/>
                     <div className={classes.tableWrapper}>
                         <Table className={classes.table} aria-labelledby="tableTitle">
