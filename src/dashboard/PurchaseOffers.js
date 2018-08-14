@@ -146,7 +146,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3,
     },
     table: {
-        minWidth: 1020,
+       // minWidth: 1020,
     },
     tableWrapper: {
         overflowX: 'auto',
@@ -222,6 +222,7 @@ class EnhancedTable extends React.Component {
         const {order, orderBy, selected, rowsPerPage, page} = this.state;
         const data = (this.props.data === null || this.props.data === undefined) ? [] : this.props.data;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+        var i = 0;
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length}/>
@@ -240,6 +241,7 @@ class EnhancedTable extends React.Component {
                                 .sort(getSorting(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map(n => {
+                                    n.id = i++;
                                     const isSelected = this.isSelected(n.id);
                                     return (
                                         <TableRow
@@ -255,9 +257,12 @@ class EnhancedTable extends React.Component {
                                             <TableCell component="th" scope="row" padding="none">
                                                 {n.buyer}
                                             </TableCell>
-                                            <TableCell numeric>{n.buyerPublicKey}</TableCell>
+                                            <TableCell  style={{
+                                                whiteSpace: "normal",
+                                                wordWrap: "break-word"
+                                            }}>{n.buyerPublicKey.slice(0, 50) + "..."}</TableCell>
                                             <TableCell numeric>{n.amount}</TableCell>
-                                            <TableCell numeric>
+                                            <TableCell>
                                                 <Button color="primary" className={classes.button}>
                                                     Accept
                                                 </Button>

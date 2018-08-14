@@ -37,7 +37,7 @@ class Customer extends Component {
                     <div>
                     </div>
                     <SearchResults pk={this.props.match.params.pk}/>
-                    <PurchaseOffers />
+                    <PurchaseOffers pk={this.props.match.params.pk}/>
                 </div>
             </Grid>
         );

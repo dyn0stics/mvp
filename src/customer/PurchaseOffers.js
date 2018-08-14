@@ -16,13 +16,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
+import axios from "axios";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-
-let counter = 0;
-function createData(client, price, date, status) {
-    counter += 1;
-    return {id: counter, client, price, date, status};
-}
 
 function getSorting(order, orderBy) {
     return order === 'desc'
@@ -33,9 +28,11 @@ function getSorting(order, orderBy) {
 const columnData = [
     {id: 'client', numeric: false, disablePadding: true, label: 'Client'},
     {id: 'price', numeric: true, disablePadding: false, label: 'Price'},
-    {id: 'date', numeric: true, disablePadding: false, label: 'Date'},
+    {id: 'data', numeric: true, disablePadding: false, label: 'Data'},
     {id: 'status', numeric: true, disablePadding: false, label: 'Status'}
 ];
+
+const apiUrl = window.API_URL;
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -171,14 +168,32 @@ class EnhancedTable extends React.Component {
             order: 'desc',
             orderBy: 'date',
             selected: [],
-            data: [
-                createData('0xd8f0a09790bb2300a5f55ea63079ef55706fb353', '2500 DYNO', '13/07/2018', 'accepted'),
-                createData('0xd8f0a09790bb2300a5f55ea63079ef55706fb353', '1250 DYNO', '13/07/2018', 'accepted')
-            ],
+            data: [],
             page: 0,
             rowsPerPage: 5,
         };
+        this.updateOffers = this.updateOffers.bind(this);
     }
+
+    componentDidMount() {
+        this.setState({pk: this.props.pk}, () => {
+            this.updateOffers(this.state.pk);
+        });
+    }
+
+    updateOffers = (pk) => {
+        let self = this;
+        //this.setState({loadDialogOpen: true});
+        axios.get(apiUrl + "/customer/offers?pk=" + self.state.pk)
+            .then(result => {
+                self.setState({data: result.data}, () => {
+                    // self.setState({loadDialogOpen: false});
+                });
+            })
+            .catch(ex => {
+                // self.setState({loadDialogOpen: false});
+            });
+    };
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -269,10 +284,10 @@ class EnhancedTable extends React.Component {
                                                 <Checkbox checked={isSelected}/>
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
-                                                {n.client}
+                                                {n.seller}
                                             </TableCell>
-                                            <TableCell numeric>{n.price}</TableCell>
-                                            <TableCell numeric>{n.date}</TableCell>
+                                            <TableCell numeric>{n.amount} DYNO</TableCell>
+                                            <TableCell numeric>{n.ipfs}</TableCell>
                                             <TableCell numeric>{n.status}</TableCell>
                                         </TableRow>
                                     );
