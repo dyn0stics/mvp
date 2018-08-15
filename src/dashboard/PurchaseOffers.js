@@ -262,7 +262,7 @@ class EnhancedTable extends React.Component {
                                                 wordWrap: "break-word"
                                             }}>{n.buyerPublicKey.slice(0, 50) + "..."}</TableCell>
                                             <TableCell numeric>{n.amount}</TableCell>
-                                            <TableCell>
+                                            <TableCell numeric>
                                                 <Button color="primary" className={classes.button}>
                                                     Accept
                                                 </Button>

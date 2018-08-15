@@ -270,6 +270,7 @@ class EnhancedTable extends React.Component {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map(n => {
                                     const isSelected = this.isSelected(n.id);
+                                    let status = n.ipfs === "" ? "Pending" : "Accepted";
                                     return (
                                         <TableRow
                                             hover
@@ -288,7 +289,9 @@ class EnhancedTable extends React.Component {
                                             </TableCell>
                                             <TableCell numeric>{n.amount} DYNO</TableCell>
                                             <TableCell numeric>{n.ipfs}</TableCell>
-                                            <TableCell numeric>{n.status}</TableCell>
+                                            <TableCell numeric>
+                                                {status}
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

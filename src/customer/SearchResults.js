@@ -411,7 +411,11 @@ EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 const styles = theme => ({
     root: {
         width: '100%',
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit * 5,
+    },
+    container: {
+        paddingTop: 30,
+        marginBottom: -20
     },
     table: {
         minWidth: 1020,
@@ -420,6 +424,9 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         minWidth: 120,
         maxWidth: 300,
+    },
+    selectMenu: {
+        paddingBottom: 10
     },
     tableWrapper: {
         overflowX: 'auto',
@@ -606,77 +613,77 @@ class SearchResults extends React.Component {
         return (
             <div>
                 <Paper className={classes.root}>
-                    <Grid>
-                        <Row>
-                            <FormControl component="fieldset" required
-                                         className={classes.formControl}
-                                         style={{paddingTop: 30, paddingRight: 10}}>
-                                <Typography id="label">Max Age ({this.state.age})</Typography>
-                                <Slider value={this.state.age}
-                                        step={1}
-                                        aria-labelledby="label"
-                                        onChange={this.handleAgeChange}
-                                />
-                            </FormControl>
-                            <FormControl component="fieldset" required
-                                         style={{paddingTop: 30, paddingRight: 10}}
-                                         className={classes.formControl}>
-                                <Typography id="label">Max Weight ({this.state.weight})</Typography>
-                                <Slider value={this.state.weight}
-                                        aria-labelledby="label"
-                                        step={1}
-                                        max={150}
-                                        onChange={this.handleWeightChange}/>
-                            </FormControl>
-                            <FormControl className={classes.formControl}
-                                         style={{paddingTop: 20, paddingRight: 10}}>
-                                <InputLabel htmlFor="select-multiple" style={{paddingTop: 10, paddingRight: 10}}>Countries</InputLabel>
-                                <Select
-                                    multiple
-                                    value={this.state.countries}
-                                    onChange={this.handleCountriesChange}
-                                    input={<Input id="select-multiple"/>}
-                                    MenuProps={MenuProps}
-                                >
-                                    {countries.map(countires => (
-                                        <MenuItem
-                                            key={countires}
-                                            value={countires}
-                                            style={{
-                                                fontWeight: this.state.countries.indexOf(countires) === -1
-                                                    ? "normal"
-                                                    : "bold",
-                                            }}
-                                        >
-                                            {countires}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl component="fieldset"
-                                         className={classes.formControl}
-                                         style={{paddingTop: 20, paddingRight: 10}}>
-                                <InputLabel htmlFor="gender-helper"
-                                            style={{paddingTop: 10, paddingRight: 10}}>Gender</InputLabel>
-                                <Select
-                                    value={this.state.gender}
-                                    onChange={this.handleGenderChange}
-                                    name="gender"
-                                    input={<Input name="gender" id="gender-helper"/>}
-                                >
-                                    <MenuItem value={"all"}>
-                                        <em>All</em>
+                    <Grid className={classes.container}>
+                        <FormControl component="fieldset" required
+                                     className={classes.formControl}
+                                     style={{paddingRight: 10}}>
+                            <Typography id="label">Max Age ({this.state.age})</Typography>
+                            <Slider value={this.state.age}
+                                    step={1}
+                                    aria-labelledby="label"
+                                    onChange={this.handleAgeChange}
+                            />
+                        </FormControl>
+                        <FormControl component="fieldset" required
+                                     style={{paddingRight: 10}}
+                                     className={classes.formControl}>
+                            <Typography id="label">Max Weight ({this.state.weight})</Typography>
+                            <Slider value={this.state.weight}
+                                    aria-labelledby="label"
+                                    step={1}
+                                    max={150}
+                                    onChange={this.handleWeightChange}/>
+                        </FormControl>
+                        <FormControl className={classes.formControl}
+                                     style={{paddingRight: 10}}>
+                            <InputLabel htmlFor="select-multiple">Countries</InputLabel>
+                            <Select
+                                multiple
+                                value={this.state.countries}
+                                onChange={this.handleCountriesChange}
+                                input={<Input id="select-multiple"/>}
+                                MenuProps={MenuProps}
+                                className={classes.selectMenu}
+                            >
+                                {countries.map(countires => (
+                                    <MenuItem
+                                        key={countires}
+                                        value={countires}
+                                        style={{
+                                            fontWeight: this.state.countries.indexOf(countires) === -1
+                                                ? "normal"
+                                                : "bold",
+                                        }}
+                                    >
+                                        {countires}
                                     </MenuItem>
-                                    <MenuItem value={"m"}>Male</MenuItem>
-                                    <MenuItem value={"f"}>Female</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <FormControl className={classes.formControl} style={{paddingTop: 30, paddingRight: 10}}>
-                                <Button variant="contained" onClick={this.doSearch} color="primary">
-                                    Search
-                                </Button>
-                            </FormControl>
-                        </Row>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl component="fieldset"
+                                     className={classes.formControl}
+                                     style={{paddingRight: 10}}>
+                            <InputLabel htmlFor="gender-helper">Gender</InputLabel>
+                            <Select
+                                value={this.state.gender}
+                                onChange={this.handleGenderChange}
+                                name="gender"
+                                className={classes.selectMenu}
+                                input={<Input name="gender" id="gender-helper"/>}
+                            >
+                                <MenuItem value={"all"}>
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value={"m"}>Male</MenuItem>
+                                <MenuItem value={"f"}>Female</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl className={classes.formControl} style={{paddingRight: 10}}>
+                            <Button variant="contained" onClick={this.doSearch} color="primary">
+                                Search
+                            </Button>
+                        </FormControl>
+
                     </Grid>
                     <EnhancedTableToolbar numSelected={selected.length}/>
                     <div className={classes.tableWrapper}>
